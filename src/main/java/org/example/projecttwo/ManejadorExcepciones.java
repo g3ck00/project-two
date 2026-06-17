@@ -1,6 +1,8 @@
 package org.example.projecttwo;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice //?
+@Slf4j
 public class ManejadorExcepciones {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> manejarValidacion(MethodArgumentNotValidException ex){
@@ -58,7 +61,23 @@ public class ManejadorExcepciones {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> manejarGeneral(Exception ex){
+
+    public ResponseEntity<String> manejarGeneral(Exception ex, HttpServletRequest request){
+
+
+        log.error("""
+            Error no controlado:
+            Tipo: {}
+            Mensaje: {}
+            URL: {}
+            Método: {}
+            """,
+                ex.getClass().getName(),
+                ex.getMessage(),
+                request.getRequestURI(),
+                request.getMethod(),
+                ex
+        );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno...");
     }
 }

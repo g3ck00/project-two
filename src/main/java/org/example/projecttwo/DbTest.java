@@ -1,4 +1,4 @@
-/* org.example.projecttwo;
+/*package org.example.projecttwo;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.jdbc.core.JdbcTemplate;

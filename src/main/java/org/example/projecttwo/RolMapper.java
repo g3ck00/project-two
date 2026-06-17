@@ -6,6 +6,6 @@ import org.mapstruct.Mapper;
 public interface RolMapper {
     RolDTO toDTO(Rol rol);
 
-    //Rol toEntity(CrearRolDTO dto);
+    Rol toEntity(CrearRolDTO dto);
 }
 

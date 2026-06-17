@@ -1,8 +1,8 @@
 package org.example.projecttwo;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,5 +20,19 @@ public class RolController {
     @GetMapping
     public List<RolDTO> leerRoles(){
         return rolService.leerRoles();
+    }
+
+    //Crear rol
+    @PostMapping
+    public ResponseEntity<String> crearRol(@Valid @RequestBody CrearRolDTO dto){
+        rolService.crearRol(dto);
+        return ResponseEntity.ok().body("Rol creado.");
+    }
+
+    //Actualizar rol
+    @PutMapping("/{id}")
+    public ResponseEntity<String> actualizarRol(@PathVariable Long id, @Valid @RequestBody ActualizarRolDTO dto){
+        rolService.actualizarRol(id, dto);
+        return ResponseEntity.ok().body("Rol actualizado.");
     }
 }

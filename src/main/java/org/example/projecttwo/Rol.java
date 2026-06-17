@@ -1,22 +1,24 @@
 package org.example.projecttwo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
 @Setter
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class Rol {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idRol;
 
     @OneToMany(mappedBy="rol")
+    @JsonIgnore
     private List<UsuarioRol> usuarioRoles;
 
     @NotBlank
