@@ -1,0 +1,4 @@
+implementar
+	borrado lógico
+	estados a,i,n
+	fechamodificacion

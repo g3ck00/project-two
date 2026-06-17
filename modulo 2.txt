@@ -1,0 +1,19 @@
+modulo 2
+
+
+modelar las tablas en spring
+
+id compuesta -> @embededid 							(implementada, pero revisar) -> testing
+RELACIONES ENTRE TABLAS @ONETOMANY,  @MANYTOMANY, ETC (dISCORD) 		(implementada, pero revisar) -> testing
+USAR OPTIONAL, RESPONSEENTITY 							(hecho, pero revisar)
+SEPARAR LAS CAPAS DE SERVICIO (CONTROLADOR, SERVICIO) 				(hecho, pero revisar)
+BASE DE DATOS -> DBCONFIG  (NO HACEN QUE SPRING LA AUTOGESTIONE) (OPCIONAL) 	x
+VALIDACIONES 									(implementado parcialmente, revisar)
+EXCEPCIONES CENTRALIZADAS 							(implementado parcialmente, revisar)
+ENTIDADES, DTO Y DAO 								(hecho parcialmente)
+QUERY METHODOS, HACER 1 Y 1, QUERY NATIVOS 					(hecho parcialmente, revisar)
+PAGINACION 									(implementado parcialmente, revisar)
+
+ALGUNA COSA ADICIONAL... (pendiente)
+
+demasiadas cosas para un dia a otro...

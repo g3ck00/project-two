@@ -1,0 +1,5 @@
+Pruebas para el manejador
+
+	Falta de comilla, coma...
+	Si un campo no cumple con la validación
+	Si se ingresa una fecha con formato incorrecto
