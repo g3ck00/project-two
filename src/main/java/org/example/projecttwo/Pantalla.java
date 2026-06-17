@@ -1,5 +1,6 @@
 package org.example.projecttwo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -16,12 +17,12 @@ public class Pantalla {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPantalla;
 
+    @OneToMany(mappedBy = "pantalla")
+    private List<RolPantalla> rolPantallas;
+
     @NotBlank(message="El nombre de la pantalla no puede estar vacío...")
     private String nombrePantalla;
 
     @NotBlank(message="La descripción de la pantalla no puede estar vacío...")
     private String descripcionPantalla;
-
-    @OneToMany(mappedBy = "pantalla")
-    private List<RolPantalla> rolPantallas;
 }
