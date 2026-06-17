@@ -61,7 +61,6 @@ public class ManejadorExcepciones {
     }
 
     @ExceptionHandler(Exception.class)
-
     public ResponseEntity<String> manejarGeneral(Exception ex, HttpServletRequest request){
 
 
@@ -79,5 +78,11 @@ public class ManejadorExcepciones {
                 ex
         );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno...");
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> manejarRuntime(RuntimeException ex) {
+        return ResponseEntity.badRequest()
+                .body(ex.getMessage());
     }
 }

@@ -27,8 +27,13 @@ public class RolService {
         this.rolMapper=rolMapper;
     }
 
+    //Leer roles
     public List<RolDTO> leerRoles(){
-        return rolRepository.findAll().stream().map(rolMapper::toDTO).toList();
+        return rolRepository
+                .findAll()
+                .stream()
+                .map(rolMapper::toDTO)
+                .toList();
     }
 
     //Crear rol

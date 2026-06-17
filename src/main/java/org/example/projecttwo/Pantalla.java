@@ -12,15 +12,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Pantalla {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPantalla;
 
-    @NotBlank
+    @NotBlank(message="El nombre de la pantalla no puede estar vacío...")
     private String nombrePantalla;
 
-    @NotBlank
+    @NotBlank(message="La descripción de la pantalla no puede estar vacío...")
     private String descripcionPantalla;
 
     @OneToMany(mappedBy = "pantalla")
