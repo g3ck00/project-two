@@ -1,4 +1,4 @@
-package org.example.projecttwo;
+/* org.example.projecttwo;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,4 +18,4 @@ public class DbTest implements CommandLineRunner {
         var result = jdbcTemplate.queryForList("SELECT * FROM usuario");
         System.out.println(result);
     }
-}
+}*/
