@@ -21,6 +21,10 @@ public class Rol {
     @JsonIgnore
     private List<UsuarioRol> usuarioRoles;
 
+    @OneToMany(mappedBy="rol")
+    @JsonIgnore
+    private List<RolPantalla> rolPantallas;
+
     @NotBlank
     private String nombreRol;
 

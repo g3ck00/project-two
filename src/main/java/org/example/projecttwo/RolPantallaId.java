@@ -10,9 +10,9 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = {"rolId", "pantallaId"})
+@EqualsAndHashCode(of = {"idPantalla", "idPantalla"})
 public class RolPantallaId implements Serializable {
 
-    private Long rolId;
-    private Long pantallaId;
+    private Long idRol;
+    private Long idPantalla;
 }
