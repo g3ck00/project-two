@@ -8,10 +8,10 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class UsuarioDTO {
-
-    private Long id;
+    private Long idUsuario;
     private String nombreUsuario;
-    private String email;
+    //private String contrasenna;
+    //private String email;
     private Boolean activo;
     private LocalDate fechaCreacion;
 }

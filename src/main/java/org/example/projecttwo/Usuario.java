@@ -3,6 +3,7 @@ package org.example.projecttwo;
 import java.time.*;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.*;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,13 +12,15 @@ import org.hibernate.validator.internal.IgnoreForbiddenApisErrors;
 @Entity
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idUsuario;
 
     @OneToMany(mappedBy = "usuario")
+    @JsonIgnore
     private List<UsuarioRol> usuarioRoles;
 
     @NotBlank(message="El nombre de usuario es obligatorio...")

@@ -1,5 +1,6 @@
 package org.example.projecttwo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -17,6 +18,7 @@ public class UsuarioRol {
     @ManyToOne
     @MapsId("usuarioId")
     @JoinColumn(name="id_usuario")
+    @JsonIgnore
     private Usuario usuario;
 
     @ManyToOne
