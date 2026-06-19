@@ -3,13 +3,19 @@ package org.example.projecttwo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.example.projecttwo.dto.CredencialesInvalidasDTO;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.time.LocalDateTime;
 
 @RestControllerAdvice //?
 @Slf4j
@@ -62,8 +68,6 @@ public class ManejadorExcepciones {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> manejarGeneral(Exception ex, HttpServletRequest request){
-
-
         log.error("""
             Error no controlado:
             Tipo: {}
@@ -84,5 +88,18 @@ public class ManejadorExcepciones {
     public ResponseEntity<String> manejarRuntime(RuntimeException ex) {
         return ResponseEntity.badRequest()
                 .body(ex.getMessage());
+    }
+
+    ////// Excepciones del entorno JWT
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<CredencialesInvalidasDTO> handleBadCredentials(
+            BadCredentialsException ex) {
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new CredencialesInvalidasDTO(
+                        401,
+                        "Email o contraseña incorrecta...",
+                        LocalDateTime.now()
+                ));
     }
 }

@@ -1,5 +1,7 @@
 package org.example.projecttwo;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,30 +28,70 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain)
-        throws ServletException, IOException{
+        throws ServletException, IOException {
 
-        String authHeader=request.getHeader("Authorization");
+        String authHeader = request.getHeader("Authorization");
 
         ///
         System.out.println("Authorization: " + authHeader);
         ///
 
-        if (authHeader==null || !authHeader.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token=authHeader.substring(7); //?
-        String nombreUsuario=jwtService.extraerNombreUsuario(token);
+        String token = authHeader.substring(7); //?
+
+        String nombreUsuario;
+        try {
+            nombreUsuario = jwtService.extraerNombreUsuario(token);
+        } catch(ExpiredJwtException ex) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+            response.setContentType("application/json");
+
+            response.getWriter().write("""
+                    {
+                        "mensaje":"Token expirado. Inicie sesión otra vez."
+                    }
+            """);
+
+            return;
+        } catch(JwtException ex) {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+        response.setContentType("application/json");
+
+        response.getWriter().write("""
+                    {
+                        "mensaje":"Token inválido..."
+                    }
+            """);
+
+        return;
+
+        } catch (Exception ex) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+            response.setContentType("application/json");
+
+            response.getWriter().write("""
+                    {
+                        "mensaje":"Excepción desconocida..."
+                    }
+                    """);
+            return;
+        }
 
         ///
         System.out.println("Username: " + nombreUsuario);
         ///
 
-        if (nombreUsuario!=null && SecurityContextHolder.getContext().getAuthentication()==null) {
-            UserDetails userDetails=customUserDetailsService.loadUserByUsername(nombreUsuario);
+        if (nombreUsuario != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(nombreUsuario);
 
-            UsernamePasswordAuthenticationToken auth=new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
             SecurityContextHolder.getContext().setAuthentication(auth);
 
@@ -58,6 +100,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             ///
         }
 
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
     }
 }
