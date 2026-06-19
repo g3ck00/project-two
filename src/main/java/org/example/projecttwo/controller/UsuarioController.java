@@ -1,5 +1,6 @@
 package org.example.projecttwo.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.example.projecttwo.service.UsuarioService;
 import org.example.projecttwo.dto.ActualizarUsuarioDTO;
