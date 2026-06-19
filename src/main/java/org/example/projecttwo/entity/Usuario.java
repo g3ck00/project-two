@@ -30,6 +30,7 @@ public class Usuario {
 
     @NotBlank(message="El correo es obligatorio...")
     @Email(message="Ingrese un correo válido...")
+    @Column(unique=true)
     private String email;
 
     @NotNull(message="El estado del registro es obligatorio...")
