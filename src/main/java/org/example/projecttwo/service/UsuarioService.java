@@ -65,6 +65,7 @@ public class UsuarioService {
         Usuario usuario = mapper.toEntity(dto);
 
         usuario.setContrasenna(passwordEncoder.encode(dto.getContrasenna())); //Encriptar la contraseña luego de mapper
+        System.out.println(passwordEncoder.encode("Admin123"));
 
         Usuario guardado = usuarioRepository.save(usuario);
 
@@ -76,7 +77,7 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         usuario.setNombreUsuario(dto.getNombreUsuario());
-        usuario.setContrasenna(dto.getContrasenna());
+        usuario.setContrasenna(passwordEncoder.encode(dto.getContrasenna()));
         usuario.setEmail(dto.getEmail());
         usuario.setActivo(dto.getActivo());
 
