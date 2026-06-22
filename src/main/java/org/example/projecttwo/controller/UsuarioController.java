@@ -2,6 +2,7 @@ package org.example.projecttwo.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import org.example.projecttwo.dto.LeerUsuariosDetalladosDTO;
 import org.example.projecttwo.service.UsuarioService;
 import org.example.projecttwo.dto.ActualizarUsuarioDTO;
 import org.example.projecttwo.dto.CrearUsuarioDTO;
@@ -24,16 +25,23 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
-    //Leer usuarios
+    /*
+    //Leer usuarios v1
     @GetMapping
     public List<UsuarioDTO> obtenerUsuarios(){
         return usuarioService.obtenerUsuarios();
-    }
+    }*/
 
     //Leer usuarios (con paginación)
     @GetMapping("/p")
     public Page<Usuario> obtenerUsuariosPaginados(Pageable pageable){
         return usuarioService.obtenerUsuariosPaginados(pageable);
+    }
+
+    //Leer usuarios v2
+    @GetMapping()
+    public List<LeerUsuariosDetalladosDTO> leerUsuariosDetalladosDTOS(){
+        return usuarioService.leerUsuariosDetalladosDTO();
     }
 
     //Crear usuario
