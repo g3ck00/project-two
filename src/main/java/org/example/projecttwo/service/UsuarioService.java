@@ -3,6 +3,7 @@ package org.example.projecttwo.service;
 //import org.springdoc.core.converters.models.Pageable;
 import org.example.projecttwo.dto.ActualizarUsuarioDTO;
 import org.example.projecttwo.dto.CrearUsuarioDTO;
+import org.example.projecttwo.dto.LeerUsuariosDetalladosDTO;
 import org.example.projecttwo.dto.UsuarioDTO;
 import org.example.projecttwo.entity.Usuario;
 import org.example.projecttwo.mapper.UsuarioMapper;
@@ -48,16 +49,47 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }*/
 
+    //Leer usuarios
     public List<UsuarioDTO> obtenerUsuarios(){
         return usuarioRepository.findAll().stream().map(mapper::toDTO).toList();
     }
 
+    //Leer usuarios (con paginación)
     public Page<Usuario> obtenerUsuariosPaginados(Pageable pageable){
         return usuarioRepository.findAll(pageable);
     }
 
     public Usuario obtenerUsuario(Long id) {
         return usuarioRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    }
+
+    //Leer usuarios v2
+    public List<LeerUsuariosDetalladosDTO> leerUsuariosDetalladosDTO() {
+
+        List<Usuario> usuarios = usuarioRepository.findAllConRoles();
+
+        return usuarios.stream()
+                .map(this::mapToDetalladoDTO)
+                .toList();
+    }
+
+    private LeerUsuariosDetalladosDTO mapToDetalladoDTO(Usuario u) {
+
+        LeerUsuariosDetalladosDTO dto = new LeerUsuariosDetalladosDTO();
+
+        dto.setIdUsuario(u.getIdUsuario());
+        dto.setNombreUsuario(u.getNombreUsuario());
+        dto.setEmail(u.getEmail());
+
+        dto.setRoles(
+                u.getUsuarioRoles()
+                        .stream()
+                        .filter(ur -> Boolean.TRUE.equals(ur.getActivo()))
+                        .map(ur -> ur.getRol().getNombreRol())
+                        .toList()
+        );
+
+        return dto;
     }
 
     //Crear usuario

@@ -19,4 +19,12 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     @Query(value="SELECT * FROM usuario", nativeQuery=true)
     Usuario mostrarTodos();
+
+    @Query("""
+    SELECT DISTINCT u FROM Usuario u
+    LEFT JOIN FETCH u.usuarioRoles ur
+    LEFT JOIN FETCH ur.rol
+    WHERE u.activo = true
+    """)
+    List<Usuario> findAllConRoles();
 }
