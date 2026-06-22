@@ -30,19 +30,30 @@ public class UsuarioController {
     @GetMapping
     public List<UsuarioDTO> obtenerUsuarios(){
         return usuarioService.obtenerUsuarios();
-    }*/
+    }
+    */
 
+    /*
     //Leer usuarios (con paginación)
     @GetMapping("/p")
     public Page<Usuario> obtenerUsuariosPaginados(Pageable pageable){
         return usuarioService.obtenerUsuariosPaginados(pageable);
     }
+    */
 
+    //Leer usuarios v2 con paginación
+    @GetMapping
+    public Page<LeerUsuariosDetalladosDTO> leerUsuariosDetallados(Pageable pageable){
+        return usuarioService.leerUsuariosDetallados(pageable);
+    }
+
+    /*
     //Leer usuarios v2
     @GetMapping()
     public List<LeerUsuariosDetalladosDTO> leerUsuariosDetalladosDTOS(){
         return usuarioService.leerUsuariosDetalladosDTO();
     }
+     */
 
     //Crear usuario
     @PostMapping
@@ -58,11 +69,13 @@ public class UsuarioController {
         return ResponseEntity.ok("Usuario editado.");
     }
 
+    /*
     //Leer usuarios (Native Query)
     @GetMapping("/q")
     public List<Usuario> mostrarTodos(){
         return usuarioService.mostrarTodos();
     }
+     */
 
     //Leer usuario por ID
     @GetMapping("/{id}")

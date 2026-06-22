@@ -49,20 +49,31 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }*/
 
+    /*
     //Leer usuarios
     public List<UsuarioDTO> obtenerUsuarios(){
         return usuarioRepository.findAll().stream().map(mapper::toDTO).toList();
     }
+    */
 
+    /*
     //Leer usuarios (con paginación)
     public Page<Usuario> obtenerUsuariosPaginados(Pageable pageable){
         return usuarioRepository.findAll(pageable);
     }
+     */
 
     public Usuario obtenerUsuario(Long id) {
         return usuarioRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
 
+    //Leer usuarios v2 con paginación
+    public Page<LeerUsuariosDetalladosDTO> leerUsuariosDetallados(Pageable pageable){
+        Page<Usuario> pagina=usuarioRepository.findAll(pageable);
+        return pagina.map(this::mapToDetalladoDTO);
+    }
+
+    /*
     //Leer usuarios v2
     public List<LeerUsuariosDetalladosDTO> leerUsuariosDetalladosDTO() {
 
@@ -72,6 +83,7 @@ public class UsuarioService {
                 .map(this::mapToDetalladoDTO)
                 .toList();
     }
+     */
 
     private LeerUsuariosDetalladosDTO mapToDetalladoDTO(Usuario u) {
 
@@ -120,7 +132,9 @@ public class UsuarioService {
 
     //Query nativos
 
+    /*
     public List<Usuario> mostrarTodos(){
-        return Collections.singletonList(usuarioRepository.mostrarTodos());
+        return usuarioRepository.mostrarTodos();
     }
+     */
 }

@@ -17,13 +17,12 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     //Query nativos
 
-    @Query(value="SELECT * FROM usuario", nativeQuery=true)
-    Usuario mostrarTodos();
+    /*
+    @Query(value="SELECT * FROM usuario", nativeQuery=true) List<Usuario> mostrarTodos();
+     */
 
     @Query("""
-    SELECT DISTINCT u FROM Usuario u
-    LEFT JOIN FETCH u.usuarioRoles ur
-    LEFT JOIN FETCH ur.rol
+    SELECT DISTINCT u FROM Usuario u LEFT JOIN FETCH u.usuarioRoles ur LEFT JOIN FETCH ur.rol
     WHERE u.activo = true
     """)
     List<Usuario> findAllConRoles();
