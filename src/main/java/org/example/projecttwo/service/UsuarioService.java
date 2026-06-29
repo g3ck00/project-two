@@ -12,10 +12,13 @@ import org.example.projecttwo.repository.UsuarioRepository;
 import org.example.projecttwo.repository.UsuarioRolRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -67,12 +70,6 @@ public class UsuarioService {
         return usuarioRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
 
-    //Leer usuarios v2 con paginación
-    public Page<LeerUsuariosDetalladosDTO> leerUsuariosDetallados(Pageable pageable){
-        Page<Usuario> pagina=usuarioRepository.findAll(pageable);
-        return pagina.map(this::mapToDetalladoDTO);
-    }
-
     /*
     //Leer usuarios v2
     public List<LeerUsuariosDetalladosDTO> leerUsuariosDetalladosDTO() {
@@ -85,16 +82,27 @@ public class UsuarioService {
     }
      */
 
+    //Leer usuarios v2 con paginación
+    public Page<LeerUsuariosDetalladosDTO> leerUsuariosDetallados(Pageable pageable){
+        Page<Usuario> pagina=usuarioRepository.findAll(pageable);
+        return pagina.map(this::mapToDetalladoDTO);
+    }
+
     private LeerUsuariosDetalladosDTO mapToDetalladoDTO(Usuario u) {
 
         LeerUsuariosDetalladosDTO dto = new LeerUsuariosDetalladosDTO();
 
+        //Información mostrada (límites se establecen en conjunto con el DTO)
         dto.setIdUsuario(u.getIdUsuario());
         dto.setNombreUsuario(u.getNombreUsuario());
         dto.setEmail(u.getEmail());
+        dto.setActivo(u.getActivo());
+        dto.setCreadoPor(u.getCreadoPor());
+        dto.setFechaCreacionRegistrada(u.getFechaCreacionRegistrada());
+        dto.setModificadoPor(u.getModificadoPor());
+        dto.setFechaModificacion(u.getFechaModificacion());
 
-        dto.setRoles(
-                u.getUsuarioRoles()
+        dto.setRoles(u.getUsuarioRoles()
                         .stream()
                         .filter(ur -> Boolean.TRUE.equals(ur.getActivo()))
                         .map(ur -> ur.getRol().getNombreRol())
@@ -109,7 +117,16 @@ public class UsuarioService {
         Usuario usuario = mapper.toEntity(dto);
 
         usuario.setContrasenna(passwordEncoder.encode(dto.getContrasenna())); //Encriptar la contraseña luego de mapper
-        System.out.println(passwordEncoder.encode("Admin123"));
+
+        //Extraer información de la sesión autenticada
+        Authentication auth= SecurityContextHolder.getContext().getAuthentication();
+
+        //auth.getName() extrae el nombre de usuario autenticado en la sesión
+        usuario.setCreadoPor(auth.getName());
+
+        usuario.setFechaCreacionRegistrada(LocalDate.now());
+
+        //System.out.println(passwordEncoder.encode("Admin123"));
 
         Usuario guardado = usuarioRepository.save(usuario);
 
@@ -124,6 +141,10 @@ public class UsuarioService {
         usuario.setContrasenna(passwordEncoder.encode(dto.getContrasenna()));
         usuario.setEmail(dto.getEmail());
         usuario.setActivo(dto.getActivo());
+
+        Authentication auth= SecurityContextHolder.getContext().getAuthentication();
+        usuario.setModificadoPor(auth.getName());
+        usuario.setFechaModificacion(LocalDate.now());
 
         Usuario actualizado = usuarioRepository.save(usuario);
 

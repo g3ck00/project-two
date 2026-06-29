@@ -36,7 +36,16 @@ public class Usuario {
     @NotNull(message="El estado del registro es obligatorio...")
     private Boolean activo;
 
-    @NotNull(message="La fecha de creación es obligatoria...")
-    @PastOrPresent(message="La fecha de creación no puede ser una fecha futura...")
+    //Antiguo procedimiento: el creador del registro debía insertar manualmente una fecha
+    //Se mantiene aquí, aunque como un "parche" para no romper el esquema SQL con alguna modificación; aporta un valor que no se visualiza ni afecta la programación
+    //Debería ser removido en actualizaciones futuras
+    //@NotNull(message="La fecha de creación es obligatoria...")
+    //@PastOrPresent(message="La fecha de creación no puede ser una fecha futura...")
     private LocalDate fechaCreacion;
+
+    private String creadoPor;
+    private LocalDate fechaCreacionRegistrada;
+
+    private String modificadoPor;
+    private LocalDate fechaModificacion;
 }

@@ -25,6 +25,8 @@ public class CrearUsuarioDTO {
     @NotNull
     private Boolean activo;
 
+    /*
     @NotNull
     private LocalDate fechaCreacion;
+     */
 }
