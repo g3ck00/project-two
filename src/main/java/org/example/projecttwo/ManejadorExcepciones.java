@@ -16,16 +16,25 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestControllerAdvice //?
 @Slf4j
 public class ManejadorExcepciones {
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> manejarValidacion(MethodArgumentNotValidException ex){
-        String mensajeError=ex.getBindingResult().getFieldError().getDefaultMessage();
-        String campo=ex.getBindingResult().getFieldError().getField();
+    public ResponseEntity<Map<String, String>> manejarValidacion(MethodArgumentNotValidException ex){
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(campo+": "+mensajeError);
+        Map<String, String> errores=new HashMap();
+
+        ex.getBindingResult()
+                .getFieldErrors()
+                .forEach(error->errores.put(
+                        error.getField(),
+                        error.getDefaultMessage()
+                ));
+
+        return ResponseEntity.badRequest().body(errores);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
