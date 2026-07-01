@@ -88,6 +88,11 @@ public class UsuarioService {
         return pagina.map(this::mapToDetalladoDTO);
     }
 
+
+    public List<Usuario> readUsuarios(){
+        return usuarioRepository.readUsuarios();
+    }
+
     private LeerUsuariosDetalladosDTO mapToDetalladoDTO(Usuario u) {
 
         LeerUsuariosDetalladosDTO dto = new LeerUsuariosDetalladosDTO();
@@ -152,10 +157,4 @@ public class UsuarioService {
     }
 
     //Query nativos
-
-    /*
-    public List<Usuario> mostrarTodos(){
-        return usuarioRepository.mostrarTodos();
-    }
-     */
 }

@@ -47,6 +47,13 @@ public class UsuarioController {
         return usuarioService.leerUsuariosDetallados(pageable);
     }
 
+
+    //Leer usuarios (Native Query)
+    @GetMapping("/jpql/")
+    public List<Usuario> readUsuarios() {
+        return usuarioService.readUsuarios();
+    }
+
     /*
     //Leer usuarios v2
     @GetMapping()
@@ -68,14 +75,6 @@ public class UsuarioController {
         usuarioService.actualizarUsuario(id, dto);
         return ResponseEntity.ok("Usuario editado.");
     }
-
-    /*
-    //Leer usuarios (Native Query)
-    @GetMapping("/q")
-    public List<Usuario> mostrarTodos(){
-        return usuarioService.mostrarTodos();
-    }
-     */
 
     //Leer usuario por ID
     @GetMapping("/{id}")
