@@ -47,13 +47,6 @@ public class UsuarioController {
         return usuarioService.leerUsuariosDetallados(pageable);
     }
 
-
-    //Leer usuarios (Native Query)
-    @GetMapping("/jpql/")
-    public List<Usuario> readUsuarios() {
-        return usuarioService.readUsuarios();
-    }
-
     /*
     //Leer usuarios v2
     @GetMapping()
@@ -81,4 +74,41 @@ public class UsuarioController {
     public Usuario obtenerUsuario(@PathVariable Long id) {
         return usuarioService.obtenerUsuario(id);
     }
+
+    // #################### JPQL ####################
+
+    //Endpoint global para JPQL
+    // ...
+
+    //Read todos los usuarios (JPQL)
+    @GetMapping("/jpql")
+    public List<Usuario> readUsuariosJPQL() {
+        return usuarioService.readUsuariosJPQL();
+    }
+
+    //Read todos los usuarios (JPQL, detallados)
+    @GetMapping("/jpql/detallados")
+    public Page<LeerUsuariosDetalladosDTO> readUsuariosJPQLDetallados(Pageable pageable) {
+        return usuarioService.readUsuariosJPQLDetallados(pageable);
+    }
+
+    //Read todos los usuarios where estado del registro = false
+    @GetMapping("/jpql/usuarios/registros-inactivos")
+    public Page<LeerUsuariosDetalladosDTO> readUsuariosJPQLConEstadoDelRegistroInactivo(Pageable pageable) {
+        return usuarioService.readUsuariosJPQLConEstadoDelRegistroInactivo(pageable);
+    }
+
+    //Read todos los usuarios where ID>=10 and ID<=20
+    @GetMapping("/jpql/usuarios/id-entre-10-y-20-inclusivos")
+    public Page<LeerUsuariosDetalladosDTO> readUsuariosJPQLConIDEntreDiezYVeinteInclusivos(Pageable pageable) {
+        return usuarioService.readUsuariosJPQLConIDEntreDiezYVeinteInclusivos(pageable);
+    }
+
+    //
+    @GetMapping("/jpql/usuarios/activos-o-inactivos")
+    public Page<LeerUsuariosDetalladosDTO> readUsuariosActivosOInactivos(Pageable pageable)
+    {
+        return usuarioService.readUsuariosJPQLConIDEntreDiezYVeinteInclusivos(pageable);
+    }
+
 }

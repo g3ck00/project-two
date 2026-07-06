@@ -88,11 +88,7 @@ public class UsuarioService {
         return pagina.map(this::mapToDetalladoDTO);
     }
 
-
-    public List<Usuario> readUsuarios(){
-        return usuarioRepository.readUsuarios();
-    }
-
+    //Leer usuarios v2 con paginación
     private LeerUsuariosDetalladosDTO mapToDetalladoDTO(Usuario u) {
 
         LeerUsuariosDetalladosDTO dto = new LeerUsuariosDetalladosDTO();
@@ -156,5 +152,39 @@ public class UsuarioService {
         return mapper.toDTO(actualizado);
     }
 
-    //Query nativos
+    // #################### JPQL ####################
+
+    //Read todos los usuarios (JPQL)
+    public List<Usuario> readUsuariosJPQL(){
+        return usuarioRepository.readUsuariosJPQL();
+    }
+
+    //Read todos los usuarios (JPQL, detallados)
+    public Page<LeerUsuariosDetalladosDTO> readUsuariosJPQLDetallados(Pageable pageable){
+        Page<Usuario> pagina=usuarioRepository.readUsuariosJPQLDetallados(pageable);
+        return pagina.map(this::mapToDetalladoDTO);
+    }
+
+    //Read todos los usuarios where estado del registro = false
+    public Page<LeerUsuariosDetalladosDTO> readUsuariosJPQLConEstadoDelRegistroInactivo(Pageable pageable) {
+        Page<Usuario> pagina=usuarioRepository.readUsuariosJPQLConEstadoDelRegistroInactivo(pageable);
+        return pagina.map(this::mapToDetalladoDTO);
+    }
+
+    //Read todos los usuarios where ID>=10 and ID<=20
+    public Page<LeerUsuariosDetalladosDTO> readUsuariosJPQLConIDEntreDiezYVeinteInclusivos(Pageable pageable) {
+        Page<Usuario> pagina=usuarioRepository.readUsuariosJPQLConIDEntreDiezYVeinteInclusivos(pageable);
+        return pagina.map(this::mapToDetalladoDTO);
+    }
+
+    //Read todos los usuarios where activo...?
+    public Page<LeerUsuariosDetalladosDTO> readUsuariosActivosOInactivos(Pageable pageable)
+    {
+        Page<Usuario> pagina=usuarioRepository.readUsuariosActivosOInactivos(pageable);
+        return pagina.map(this::mapToDetalladoDTO);
+    }
+
+    // #################### Query nativos ####################
+
+    //...
 }

@@ -132,6 +132,63 @@ function App() {
         }
     }
 
+    const updateUsuario=async()=>{
+        setErrores({});
+
+        setMensajeExito("");
+
+        try{
+
+            let response;
+
+            if (editandoId){
+                response=await fetch(`${API}/usuarios/${editandoId}`, {
+                    method: "UPDATE",
+                    headers: {"Content-Type": "application/json",},
+                    body: JSON.stringify(usuario),
+                });
+
+                setEditandoId(null);
+
+            } else {
+                response=await fetch ("http://localhost:8080/api/usuarios",{
+                    method: "POST",
+                    headers: {"Content-Type":"application/json",},
+                    body: JSON.stringify(usuario),
+                });
+            }
+
+            if (!response.ok){
+
+                if (response.status===400){
+                    const errores=await response.json();
+
+                    console.log(errores);
+
+                    setErrores(errores);
+
+                    return;
+                }
+
+                throw new Error("Error al editar usuario...");
+            }
+
+            setMensajeExito("Usuario guardado con éxito.")
+
+            setUsuario({
+                nombreUsuario:"",
+                contrasenna:"",
+                email:"",
+                activo:false
+            })
+
+            fetchUsuarios();
+
+        } catch (error) {
+            console.error("Error al guardar o editar usuario...");
+        }
+    }
+
 
     const buscarUsuario=async()=>{
         setErrorBusqueda("");
@@ -214,13 +271,28 @@ function App() {
           <h2>Sistema de administración de usuarios</h2>
 
           <div className={"form"}>
-              <button onClick={()=>setMostrarFormularioCreateUsuario(!mostrarFormularioCreateUsuario)}>
-                  {mostrarFormularioCreateUsuario ? "Cancelar" : "Crear usuario"}
+              <button onClick={()=>setMostrarFormularioUpdateUsuario(!mostrarFormularioUpdateUsuario)}>
+                  {mostrarFormularioUpdateUsuario ? "Cancelar" : "Modificar usuario"}
               </button>
 
-              {mostrarFormularioCreateUsuario && (
-                  <div className={"formularioCreateUsuario"}>
-                      <h2>Nuevo usuario</h2>
+
+
+              {mostrarFormularioUpdateUsuario && (
+                  <div className={"formularioUpdateUsuario"}>
+                      <h2>Modificar usuario</h2>
+
+                      <label>ID de usuario:</label>
+                      <input type="text" value={idBusqueda}
+                             onChange={(e)=>setIdBusqueda(e.target.value)}
+                      />
+
+                      <button onClick={buscarUsuario}>
+                          Buscar
+                      </button><br></br>
+
+                      {errorBusqueda && (
+                          <p className={"error"}>{errorBusqueda}</p>
+                      )}
 
                       <label>Nombre de usuario: </label>
                       <input type="text" value={usuario.nombreUsuario}
@@ -255,6 +327,55 @@ function App() {
                       <button onClick={crearUsuario}>
                             Guardar
                         </button>
+
+                      {mensajeExito&&(
+                          <p className={"exito"}>{mensajeExito}</p>
+                      )}
+
+                  </div>
+              )}
+
+              <button onClick={()=>setMostrarFormularioCreateUsuario(!mostrarFormularioCreateUsuario)}>
+                  {mostrarFormularioCreateUsuario ? "Cancelar" : "Crear usuario"}
+              </button>
+
+              {mostrarFormularioCreateUsuario && (
+                  <div className={"formularioCreateUsuario"}>
+                      <h2>Nuevo usuario</h2>
+
+                      <label>Nombre de usuario: </label>
+                      <input type="text" value={usuario.nombreUsuario}
+                             onChange={(e)=>
+                                 setUsuario({...usuario, nombreUsuario: e.target.value})
+                             }/><br></br>
+
+                      <label>Contraseña: </label>
+                      <input type="text"
+                             value={usuario.contrasenna}
+                             onChange={(e)=>
+                                 setUsuario({...usuario, contrasenna : e.target.value})
+                             }/><br></br>
+
+                      <label>Correo electrónico: </label>
+                      <input type="text"
+                             value={usuario.email}
+                             onChange={(e)=>
+                                 setUsuario({...usuario, email : e.target.value})
+                             }/><br></br>
+
+                      {errores.email &&
+                          <p className={"error"}>{errores.email}</p>}
+
+                      <label>Estado del registro: </label>
+                      <input type="checkbox"
+                             checked={usuario.activo}
+                             onChange={(e)=>
+                                 setUsuario({...usuario, activo : e.target.checked})
+                             }/><br></br>
+
+                      <button onClick={crearUsuario}>
+                          Guardar
+                      </button>
 
                       {mensajeExito&&(
                           <p className={"exito"}>{mensajeExito}</p>
