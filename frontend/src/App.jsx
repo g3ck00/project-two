@@ -6,6 +6,8 @@ import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import './App.css'
 
+import Button from "./components/ui/Button.tsx"
+
 const API="http://localhost:8080/api"
 
 function App() {
@@ -132,6 +134,7 @@ function App() {
         }
     }
 
+    /*
     const updateUsuario=async()=>{
         setErrores({});
 
@@ -188,7 +191,7 @@ function App() {
             console.error("Error al guardar o editar usuario...");
         }
     }
-
+     */
 
     const buscarUsuario=async()=>{
         setErrorBusqueda("");
@@ -245,6 +248,7 @@ function App() {
         .catch((err) => console.log(err))
         .finally(() => setLoading(false));
   }, []);
+  */}
 
     useEffect(() => {
         fetch(`${API}/roles-asignados`)
@@ -263,19 +267,207 @@ function App() {
         return <h2>Cargando...</h2>
     }
 
-*/}
-
   return (
       <div>
           <h1>Project Two</h1>
           <h2>Sistema de administración de usuarios</h2>
 
+          <Button onClick={()=>setMostrarFormularioCreateUsuario(!mostrarFormularioCreateUsuario)}>
+              {mostrarFormularioCreateUsuario ? "Cancelar" : "Crear usuario"}
+          </Button>
+
+          {mostrarFormularioCreateUsuario && (
+              <div className={"formularioCreateUsuario"}>
+                  <h2>Nuevo usuario</h2>
+
+                  <label>Nombre de usuario: </label>
+                  <input type="text" value={usuario.nombreUsuario}
+                         onChange={(e)=>
+                             setUsuario({...usuario, nombreUsuario: e.target.value})
+                         }/><br></br>
+
+                  <label>Contraseña: </label>
+                  <input type="text"
+                         value={usuario.contrasenna}
+                         onChange={(e)=>
+                             setUsuario({...usuario, contrasenna : e.target.value})
+                         }/><br></br>
+
+                  <label>Correo electrónico: </label>
+                  <input type="text"
+                         value={usuario.email}
+                         onChange={(e)=>
+                             setUsuario({...usuario, email : e.target.value})
+                         }/><br></br>
+
+                  {errores.email &&
+                      <p className={"error"}>{errores.email}</p>}
+
+                  <label>Estado del registro: </label>
+                  <input type="checkbox"
+                         checked={usuario.activo}
+                         onChange={(e)=>
+                             setUsuario({...usuario, activo : e.target.checked})
+                         }/><br></br>
+
+                  <button onClick={crearUsuario}>
+                      Guardar
+                  </button>
+
+                  {mensajeExito&&(
+                      <p className={"exito"}>{mensajeExito}</p>
+                  )}
+
+              </div>
+          )}
+
+          <div className={"form"}>
+              <Button onClick={()=>setMostrarFormularioBuscarUsuario(!mostrarFormularioBuscarUsuario)}>
+                  {mostrarFormularioBuscarUsuario ? "Cancelar" : "Buscar usuario"}
+              </Button>
+
+              {mostrarFormularioBuscarUsuario && (
+                  <div className={"formularioBuscarUsuario"}>
+                      <h2>Buscar usuario</h2>
+
+                      <label>ID de usuario:</label>
+                      <input type="text" value={idBusqueda}
+                             onChange={(e)=>setIdBusqueda(e.target.value)}
+                      />
+
+                      <button onClick={buscarUsuario}>
+                          Buscar
+                      </button><br></br>
+
+                      {errorBusqueda && (
+                          <p className={"error"}>{errorBusqueda}</p>
+                      )}
+
+                      {usuarioEncontrado.nombreUsuario &&(
+                          <>
+                              <label>Nombre de usuario</label>
+                              <input
+                                  type={"text"}
+                                  value={usuarioEncontrado.nombreUsuario}
+                                  readOnly
+                              /><br></br>
+
+                              <label>Email</label>
+                              <input
+                                  type={"text"}
+                                  value={usuarioEncontrado.email}
+                                  readOnly
+                              /><br></br>
+
+                              <label>Activo</label>
+                              <input
+                                  type={"checkbox"}
+                                  checked={usuarioEncontrado.activo}
+                                  readOnly
+                              /><br></br>
+
+                              <label>Creado por</label>
+                              <input
+                                  type={"text"}
+                                  value={usuarioEncontrado.creadoPor}
+                                  readOnly
+                              /><br></br>
+
+                              <label>Fecha de modificación</label>
+                              <input
+                                  type={"text"}
+                                  value={usuarioEncontrado.fechaCreacionRegistrada}
+                                  readOnly
+                              /><br></br>
+
+                              <label>Modificado por</label>
+                              <input
+                                  type={"text"}
+                                  value={usuarioEncontrado.modificadoPor}
+                                  readOnly
+                              /><br></br>
+
+                              <label>fechaModificacion</label>
+                              <input
+                                  type={"text"}
+                                  value={usuarioEncontrado.fechaModifcacion}
+                                  readOnly
+                              /><br></br>
+                          </>
+                      )}
+                  </div>
+              )}
+
+              <Button onClick={()=>{return 0;}}>
+                  {mostrarFormularioCreateUsuario ? "Cancelar" : "Modificar usuario [DUMMY]"}
+              </Button>
+
+              <Button onClick={()=>{return 0;}}
+                      style={{backgroundColor:"#ff0000"}}>
+                  {mostrarFormularioCreateUsuario ? "Cancelar" : "Eliminar usuario [DUMMY]"}
+              </Button>
+
+          </div>
+
+          <div className={"container mt-4"}>
+              <h2>Usuarios</h2>
+
+              <Button disabled={pagina===0}
+                      onClick={()=>setPagina(pagina-1)}
+              >Anterior</Button>
+
+              <span>Pagina {pagina+1} de {totalPaginas}</span>
+
+              <Button disabled={pagina+1>=totalPaginas}
+                      onClick={()=>setPagina(pagina+1)}
+              >Siguiente</Button>
+
+              <br></br>
+              <br></br>
+
+              <div className={"rounded overflow-hidden"}>
+              <table
+                  className={"table table-striped table-hover table-bordered table-dark rounded align-middle"}
+                    style={{tableLayout: "fixed", width: "100%"}}
+              >
+                  <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Roles</th>
+                        <th>Estado del registro</th>
+                        <th>Creador</th>
+                        <th>Fecha de creación</th>
+                        <th>Modificador</th>
+                        <th>Fecha de modificación</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                  {usuarios.map((u)=>(
+                      <tr key={u.idUsuario} style={{height: "50px"}}>
+                          <td style={{ overflowWrap: "break-word" }}>{u.idUsuario}</td>
+                          <td style={{ overflowWrap: "break-word" }}>{u.nombreUsuario}</td>
+                          <td style={{ overflowWrap: "break-word" }}>{u.email}</td>
+                          <td style={{ overflowWrap: "break-word" }}>{u.roles}</td>
+                          <td style={{ overflowWrap: "break-word" }}>{u.activo}</td>
+                          <td style={{ overflowWrap: "break-word" }}>{u.creadoPor}</td>
+                          <td style={{ overflowWrap: "break-word" }}>{u.fechaCreacionRegistrada}</td>
+                          <td style={{ overflowWrap: "break-word" }}>{u.modificadoPor}</td>
+                          <td style={{ overflowWrap: "break-word" }}>{u.fechaModificacion}</td>
+                      </tr>
+                  ))}
+                  </tbody>
+              </table>
+              </div>
+          </div>
+
+          {/*}
           <div className={"form"}>
               <button onClick={()=>setMostrarFormularioUpdateUsuario(!mostrarFormularioUpdateUsuario)}>
                   {mostrarFormularioUpdateUsuario ? "Cancelar" : "Modificar usuario"}
               </button>
-
-
 
               {mostrarFormularioUpdateUsuario && (
                   <div className={"formularioUpdateUsuario"}>
@@ -324,6 +516,7 @@ function App() {
                                 setUsuario({...usuario, activo : e.target.checked})
                                 }/><br></br>
 
+
                       <button onClick={crearUsuario}>
                             Guardar
                         </button>
@@ -334,144 +527,9 @@ function App() {
 
                   </div>
               )}
+              {*/}
 
-              <button onClick={()=>setMostrarFormularioCreateUsuario(!mostrarFormularioCreateUsuario)}>
-                  {mostrarFormularioCreateUsuario ? "Cancelar" : "Crear usuario"}
-              </button>
-
-              {mostrarFormularioCreateUsuario && (
-                  <div className={"formularioCreateUsuario"}>
-                      <h2>Nuevo usuario</h2>
-
-                      <label>Nombre de usuario: </label>
-                      <input type="text" value={usuario.nombreUsuario}
-                             onChange={(e)=>
-                                 setUsuario({...usuario, nombreUsuario: e.target.value})
-                             }/><br></br>
-
-                      <label>Contraseña: </label>
-                      <input type="text"
-                             value={usuario.contrasenna}
-                             onChange={(e)=>
-                                 setUsuario({...usuario, contrasenna : e.target.value})
-                             }/><br></br>
-
-                      <label>Correo electrónico: </label>
-                      <input type="text"
-                             value={usuario.email}
-                             onChange={(e)=>
-                                 setUsuario({...usuario, email : e.target.value})
-                             }/><br></br>
-
-                      {errores.email &&
-                          <p className={"error"}>{errores.email}</p>}
-
-                      <label>Estado del registro: </label>
-                      <input type="checkbox"
-                             checked={usuario.activo}
-                             onChange={(e)=>
-                                 setUsuario({...usuario, activo : e.target.checked})
-                             }/><br></br>
-
-                      <button onClick={crearUsuario}>
-                          Guardar
-                      </button>
-
-                      {mensajeExito&&(
-                          <p className={"exito"}>{mensajeExito}</p>
-                      )}
-
-                  </div>
-              )}
-
-              <div className={"form"}>
-                    <button onClick={()=>setMostrarFormularioBuscarUsuario(!mostrarFormularioBuscarUsuario)}>
-                        {mostrarFormularioBuscarUsuario ? "Cancelar" : "Buscar usuario"}
-                    </button>
-
-                    {mostrarFormularioBuscarUsuario && (
-                        <div className={"formularioBuscarUsuario"}>
-                            <h2>Buscar usuario</h2>
-
-                            <label>ID de usuario:</label>
-                            <input type="text" value={idBusqueda}
-                                   onChange={(e)=>setIdBusqueda(e.target.value)}
-                            />
-
-                            <button onClick={buscarUsuario}>
-                                Buscar
-                            </button><br></br>
-
-                            {errorBusqueda && (
-                                <p className={"error"}>{errorBusqueda}</p>
-                            )}
-
-                            {usuarioEncontrado.nombreUsuario &&(
-                                <>
-                                    <label>Nombre de usuario</label>
-                                    <input
-                                        type={"text"}
-                                        value={usuarioEncontrado.nombreUsuario}
-                                        readOnly
-                                    /><br></br>
-
-                                    <label>Email</label>
-                                    <input
-                                        type={"text"}
-                                        value={usuarioEncontrado.email}
-                                        readOnly
-                                    /><br></br>
-
-                                    <label>Activo</label>
-                                    <input
-                                        type={"checkbox"}
-                                        checked={usuarioEncontrado.activo}
-                                        readOnly
-                                    /><br></br>
-
-                                    <label>Creado por</label>
-                                    <input
-                                        type={"text"}
-                                        value={usuarioEncontrado.creadoPor}
-                                        readOnly
-                                    /><br></br>
-
-                                    <label>Fecha de modificación</label>
-                                    <input
-                                        type={"text"}
-                                        value={usuarioEncontrado.fechaCreacionRegistrada}
-                                        readOnly
-                                    /><br></br>
-
-                                    <label>Modificado por</label>
-                                    <input
-                                        type={"text"}
-                                        value={usuarioEncontrado.modificadoPor}
-                                        readOnly
-                                    /><br></br>
-
-                                    <label>fechaModificacion</label>
-                                    <input
-                                        type={"text"}
-                                        value={usuarioEncontrado.fechaModifcacion}
-                                        readOnly
-                                    /><br></br>
-                                </>
-                            )}
-                        </div>
-                        )}
-              </div>
-
-              <br></br><button disabled={pagina===0}
-                      onClick={()=>setPagina(pagina-1)}
-                      >Anterior</button>
-
-              <span>Pagina {pagina+1} de {totalPaginas}</span>
-
-              <button disabled={pagina+1>=totalPaginas}
-                      onClick={()=>setPagina(pagina+1)}
-                      >Siguiente</button>
-
+          {/*}
               <h2>Usuarios</h2>
               <ul>
                   {usuarios.map((u)=>(
@@ -481,37 +539,8 @@ function App() {
                       </li>
                   ))}
               </ul>
+              {*/}
           </div>
-
-          {/*
-        <h1>Usuarios</h1>
-        {usuarios?.length === 0 ? (
-            <p>No hay usuarios...</p>
-        ) : (
-            <ul>
-              {usuarios.map((u) => (
-                  <li key={u.idUsuario}>
-                    {u.nombreUsuario} / {u.email} / {u.roles} / {u.activo}
-                    / {u.creadoPor} / {u.fechaCreacionRegistrada} / {u.modificadoPor} / {u.fechaModificacion}
-                  </li>
-              ))}
-            </ul>
-        )}
-
-          <h1>Roles asignados</h1>
-          {rolesAsignados?.length === 0 ? (
-              <p>No hay roles asignados...</p>
-          ) : (
-              <ul>
-                  {rolesAsignados.map((ra) => (
-                      <li key={`${ra.usuarioId} / ${ra.rolId}`}>
-                          {ra.usuarioId} / {ra.rolId} / {ra.fechaAsignacion} / {ra.activo}
-                      </li>
-                  ))}
-              </ul>
-          )}
-    */}
-      </div>
     );
 }
 
